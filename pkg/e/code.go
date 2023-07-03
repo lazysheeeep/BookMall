@@ -9,4 +9,6 @@ var (
 	ErrorUserHasExist   = 50001
 	ErrorFailEncryption = 50002
 	ErrorFailCreateUser = 50003
+	ErrorUserNotExist   = 50004
+	ErrorPassword       = 50005
 )

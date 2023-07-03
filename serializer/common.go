@@ -6,3 +6,8 @@ type Response struct {
 	Msg    string      `json:"msg"`
 	Data   interface{} `json:"data"`
 }
+
+type TokenDate struct {
+	User  UserVO `json:"user"`
+	Token string `json:"token"`
+}
