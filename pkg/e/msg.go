@@ -1,14 +1,16 @@
 package e
 
 var MsgFlags = map[int]string{
-	Success:             "ok",
-	Error:               "fail",
-	InvalidParams:       "参数错误",
-	ErrorUserHasExist:   "用户名已经存在",
-	ErrorFailEncryption: "密码加密失败",
-	ErrorFailCreateUser: "创建用户失败",
-	ErrorUserNotExist:   "用户名不存在",
-	ErrorPassword:       "用户密码错误",
+	Success:                    "ok",
+	Error:                      "fail",
+	InvalidParams:              "参数错误",
+	ErrorUserHasExist:          "用户名已经存在",
+	ErrorFailEncryption:        "密码加密失败",
+	ErrorFailCreateUser:        "创建用户失败",
+	ErrorUserNotExist:          "用户名不存在",
+	ErrorPassword:              "用户密码错误",
+	ErrorAuthToken:             "token认证失败",
+	ErrorAuthCheckTokenTimeOut: "token过期",
 }
 
 func GetMsg(code int) string {
