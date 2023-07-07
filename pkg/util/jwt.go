@@ -14,6 +14,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// 签发token
 func GenerateToken(id uint, username string, authority int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Hour * 24) //24小时的token时长
@@ -31,6 +32,7 @@ func GenerateToken(id uint, username string, authority int) (string, error) {
 	return token, err
 }
 
+// 验证token
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil

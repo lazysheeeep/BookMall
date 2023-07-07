@@ -7,6 +7,7 @@ import (
 	"BookMall/pkg/util"
 	"BookMall/serializer"
 	"context"
+	"mime/multipart"
 )
 
 type UserService struct {
@@ -129,5 +130,83 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 			User:  serializer.BuildUser(user),
 			Token: token,
 		},
+	}
+}
+
+func (service *UserService) Update(ctx context.Context, ID uint) serializer.Response {
+	var user *model.User
+	var err error
+	code := e.Success
+	//根据userName得到user,claims是在登录是生成的,所以id肯定是存在的
+	userDao := dao.NewUserDao(ctx)
+	user, err = userDao.GetUserByUserId(ID)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	//更新user的nickname
+	if service.NickName != "" {
+		user.NickName = service.NickName
+	}
+	err = userDao.UpdateUser(ID, user)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildUser(user),
+	}
+}
+
+func (service *UserService) Upload(ctx context.Context, file multipart.File, ID uint) serializer.Response {
+	code := e.Success
+	var user *model.User
+	var err error
+
+	//找到用户
+	userDao := dao.NewUserDao(ctx)
+	user, err = userDao.GetUserByUserId(ID)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	//保存图片到本地
+	filePath, err := UploadAvatarToLocalStatic(file, ID, user.UserName)
+	if err != nil {
+		code = e.ErrorUpLoadAvatarToStatic
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	user.Avatar = filePath
+	err = userDao.UpdateUser(ID, user)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildUser(user),
 	}
 }

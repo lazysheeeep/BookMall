@@ -13,4 +13,5 @@ var (
 	ErrorPassword              = 50005
 	ErrorAuthToken             = 50006
 	ErrorAuthCheckTokenTimeOut = 50007
+	ErrorUpLoadAvatarToStatic  = 50008
 )

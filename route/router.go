@@ -24,7 +24,10 @@ func NewRouter() *gin.Engine {
 		authed := v1.Group("/") //认证保护
 		authed.Use(middleware.JWT())
 		{
-
+			//更新昵称
+			authed.PUT("user/update", api.UserUpdate)
+			//上传头像
+			authed.POST("user/upload", api.UserUploadAvatar)
 		}
 	}
 	return r

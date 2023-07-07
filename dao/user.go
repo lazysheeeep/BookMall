@@ -27,3 +27,15 @@ func (dao *userDao) CreateUser(user *model.User) error {
 	err := dao.Model(&model.User{}).Create(&user).Error
 	return err
 }
+
+func (dao *userDao) GetUserByUserId(ID uint) (user *model.User, err error) {
+	err = dao.Model(&model.User{}).Where("id=?", ID).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (dao *userDao) UpdateUser(uId uint, user *model.User) error {
+	return dao.Model(&model.User{}).Where("id=?", uId).Updates(&user).Error
+}

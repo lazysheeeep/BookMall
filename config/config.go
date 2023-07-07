@@ -53,7 +53,7 @@ func LoadMysql(file *ini.File) {
 }
 
 func LoadPath(file *ini.File) {
-	Host = file.Section("Path").Key("Host").String()
-	AvatarPath = file.Section("Path").Key("AvatarPath").String()
-	BookPath = file.Section("Path").Key("BookPath").String()
+	Host = file.Section("path").Key("Host").String()
+	AvatarPath = file.Section("path").Key("AvatarPath").String()
+	BookPath = file.Section("path").Key("BookPath").String()
 }
