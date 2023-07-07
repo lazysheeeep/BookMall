@@ -126,7 +126,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 	return serializer.Response{
 		Status: code,
 		Msg:    e.GetMsg(code),
-		Data: serializer.TokenDate{
+		Data: serializer.TokenData{
 			User:  serializer.BuildUser(user),
 			Token: token,
 		},

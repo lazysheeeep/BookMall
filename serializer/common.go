@@ -7,7 +7,12 @@ type Response struct {
 	Data   interface{} `json:"data"`
 }
 
-type TokenDate struct {
+type TokenData struct {
 	User  UserVO `json:"user"`
 	Token string `json:"token"`
+}
+
+type ListData struct {
+	List  interface{} `json:"list"`
+	Total uint        `json:"total"`
 }

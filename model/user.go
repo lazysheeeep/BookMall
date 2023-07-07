@@ -10,6 +10,7 @@ type User struct {
 	UserName       string `gorm:"unique"`
 	PasswordDigest string
 	NickName       string
+	Mobile         string `gorm:"type varchar(11)"`
 	Email          string
 	Status         string
 	Avatar         string
