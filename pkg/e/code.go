@@ -14,4 +14,7 @@ var (
 	ErrorAuthToken             = 50006
 	ErrorAuthCheckTokenTimeOut = 50007
 	ErrorUpLoadAvatarToStatic  = 50008
+
+	//书本模块
+	ErrorUploadBookToStatic = 60001
 )

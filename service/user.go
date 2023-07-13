@@ -19,7 +19,7 @@ type UserService struct {
 
 func (service *UserService) Register(ctx context.Context) serializer.Response {
 	code := e.Success
-	var user *model.User
+	var user model.User
 	if service.Key == "" || len(service.Key) != 16 {
 		code = e.InvalidParams
 		return serializer.Response{
@@ -48,7 +48,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 			Err:    err.Error(),
 		}
 	}
-	user = &model.User{
+	user = model.User{
 		UserName: service.UserName,
 		NickName: service.NickName,
 		Status:   model.Active,

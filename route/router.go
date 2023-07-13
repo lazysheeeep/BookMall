@@ -34,6 +34,7 @@ func NewRouter() *gin.Engine {
 			//绑定邮箱 都没写 找个机会去研究一下 小生凡一写的有点奇怪
 
 			//创建商品
+			authed.POST("user/book", api.CreateBook)
 		}
 	}
 	return r

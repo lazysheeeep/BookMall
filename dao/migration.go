@@ -11,7 +11,6 @@ func migration() {
 		&model.Admin{},
 		&model.BasePage{},
 		&model.Book{},
-		&model.BookImg{},
 		&model.Carousel{},
 		&model.Cart{},
 		&model.Favorite{},
