@@ -25,6 +25,14 @@ type BookService struct {
 	model.BasePage
 }
 
+type SearchBookService struct {
+	OperationType uint   `json:"operation_type" form:"operation_type"`
+	Name          string `json:"name" form:"name"`
+	ISBN          string `json:"isbn" form:"isbn"`
+	Author        string `json:"author" form:"author"`
+	Publisher     string `json:"publisher" form:"publisher"`
+}
+
 func (service *BookService) Create(ctx context.Context, file []*multipart.FileHeader, uID uint) serializer.Response {
 	code := e.Success
 	var book model.Book
@@ -75,4 +83,49 @@ func (service *BookService) Create(ctx context.Context, file []*multipart.FileHe
 		Msg:    e.GetMsg(code),
 		Data:   serializer.BuildBook(book),
 	}
+}
+
+func (service *SearchBookService) Search(ctx context.Context) serializer.Response {
+	typeId := service.OperationType
+	bookDao := dao.NewBookDao(ctx)
+	var books []model.Book
+	var err error
+	var count int64
+	flag := false
+	code := e.Success
+	switch typeId {
+	case 1: //名字查找
+		count, books, err = bookDao.SearchBookByName(service.Name)
+	case 2: //ISBN查找
+		count, books, err = bookDao.SearchBookByISBN(service.ISBN)
+	case 3: //作者查找
+		count, books, err = bookDao.SearchBookByAuthor(service.Author)
+	case 4: //出版社查找
+		count, books, err = bookDao.SearchBookByPublisher(service.Publisher)
+	default:
+		flag = true
+	}
+	if flag {
+		code = e.ErrorOperationType
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+	if count == 0 {
+		code = e.ErrorBookNotExist
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	return serializer.BuildSearchResponse(books, uint(len(books)))
 }

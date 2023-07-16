@@ -23,6 +23,9 @@ func NewRouter() *gin.Engine {
 		//轮播图
 		v1.GET("carousel", api.ListCarousel)
 
+		//搜索商品
+		v1.POST("search", api.SearchBook)
+
 		authed := v1.Group("/") //认证保护
 		authed.Use(middleware.JWT())
 		{

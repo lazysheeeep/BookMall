@@ -3,6 +3,7 @@ package serializer
 import (
 	"BookMall/config"
 	"BookMall/model"
+	"BookMall/pkg/e"
 )
 
 type BookVO struct {
@@ -16,6 +17,9 @@ type BookVO struct {
 	DiscountPrice  string `json:"discount_price"`
 	OnSale         bool   `json:"on_sale"`
 	Num            int    `json:"num"`
+	BossId         uint   `json:"boss_id"`
+	BossName       string `json:"boss_name"`
+	BossAvatar     string `json:"boss_avatar"`
 	FirstCategory  string `json:"first_category"`
 	SecondCategory string `json:"second_category"`
 }
@@ -32,7 +36,29 @@ func BuildBook(item model.Book) BookVO {
 		DiscountPrice:  item.DiscountPrice,
 		OnSale:         true,
 		Num:            item.Num,
+		BossId:         item.BossId,
+		BossName:       item.BossName,
+		BossAvatar:     config.Host + config.HttpPort + config.BookPath + item.BossAvatar,
 		FirstCategory:  item.FirstCategory,
 		SecondCategory: item.SecondCategory,
 	}
+}
+
+func BuildSearchResponse(items []model.Book, total uint) Response {
+	return Response{
+		Status: 200,
+		Msg:    e.GetMsg(200),
+		Data: ListData{
+			List:  BuildBooks(items),
+			Total: total,
+		},
+	}
+}
+
+func BuildBooks(books []model.Book) (items []BookVO) {
+	for _, item := range books {
+		tmp := BuildBook(item)
+		items = append(items, tmp)
+	}
+	return
 }

@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Book struct {
 	gorm.Model
-	ISBN           string
+	ISBN           string `gorm:"unique"`
 	Name           string
 	Author         string
 	Publisher      string

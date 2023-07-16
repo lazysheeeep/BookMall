@@ -17,4 +17,6 @@ var (
 
 	//书本模块
 	ErrorUploadBookToStatic = 60001
+	ErrorOperationType      = 60002
+	ErrorBookNotExist       = 60003
 )

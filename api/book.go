@@ -20,3 +20,14 @@ func CreateBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 }
+
+func SearchBook(c *gin.Context) {
+	searchBook := service.SearchBookService{}
+	err := c.ShouldBind(&searchBook)
+	if err == nil {
+		res := searchBook.Search(c.Request.Context())
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, err)
+	}
+}
