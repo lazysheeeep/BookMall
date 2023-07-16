@@ -10,18 +10,17 @@ import (
 )
 
 type BookService struct {
-	ISBN           string `json:"isbn" form:"isbn"`
-	Name           string `json:"name" form:"name"`
-	Author         string `json:"author" form:"author"`
-	Publisher      string `json:"publisher" form:"publisher"`
-	Info           string `json:"info" form:"info"`
-	ImgPath        string `json:"img_path" form:"img_path"`
-	Price          string `json:"price" form:"price"`
-	DiscountPrice  string `json:"discount_price" form:"discount_price"`
-	OnSale         bool   `json:"on_sale" form:"on_sale"`
-	Num            int    `json:"num" form:"num"`
-	FirstCategory  string `json:"first_category" form:"first_category"`
-	SecondCategory string `json:"second_category" form:"second_category"`
+	ISBN          string `json:"isbn" form:"isbn"`
+	Name          string `json:"name" form:"name"`
+	Author        string `json:"author" form:"author"`
+	Publisher     string `json:"publisher" form:"publisher"`
+	Info          string `json:"info" form:"info"`
+	ImgPath       string `json:"img_path" form:"img_path"`
+	Price         string `json:"price" form:"price"`
+	DiscountPrice string `json:"discount_price" form:"discount_price"`
+	OnSale        bool   `json:"on_sale" form:"on_sale"`
+	Num           int    `json:"num" form:"num"`
+	Category      string `json:"category" form:"category"`
 	model.BasePage
 }
 
@@ -50,21 +49,20 @@ func (service *BookService) Create(ctx context.Context, file []*multipart.FileHe
 		}
 	}
 	book = model.Book{
-		ISBN:           service.ISBN,
-		Name:           service.Name,
-		Author:         service.Author,
-		Publisher:      service.Publisher,
-		Info:           service.Info,
-		ImgPath:        path,
-		Price:          service.Price,
-		DiscountPrice:  service.DiscountPrice,
-		OnSale:         true,
-		Num:            service.Num,
-		FirstCategory:  service.FirstCategory,
-		SecondCategory: service.SecondCategory,
-		BossId:         uID,
-		BossName:       boss.UserName,
-		BossAvatar:     boss.Avatar,
+		ISBN:          service.ISBN,
+		Name:          service.Name,
+		Author:        service.Author,
+		Publisher:     service.Publisher,
+		Info:          service.Info,
+		ImgPath:       path,
+		Price:         service.Price,
+		DiscountPrice: service.DiscountPrice,
+		OnSale:        true,
+		Num:           service.Num,
+		Category:      service.Category,
+		BossId:        uID,
+		BossName:      boss.UserName,
+		BossAvatar:    boss.Avatar,
 	}
 
 	bookDao := dao.NewBookDao(ctx)

@@ -2,7 +2,6 @@ package serializer
 
 import (
 	"BookMall/model"
-	"BookMall/pkg/e"
 )
 
 type CarouselVO struct {
@@ -27,15 +26,4 @@ func BuildCarousels(items []model.Carousel) (carousels []CarouselVO) {
 		carousels = append(carousels, carousel)
 	}
 	return
-}
-
-func BuildListResponse(items interface{}, total uint) Response {
-	return Response{
-		Status: 200,
-		Msg:    e.GetMsg(200),
-		Data: ListData{
-			List:  items,
-			Total: total,
-		},
-	}
 }

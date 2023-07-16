@@ -22,6 +22,7 @@ func NewRouter() *gin.Engine {
 
 		//轮播图
 		v1.GET("carousel", api.ListCarousel)
+		v1.GET("firstCategory", api.ListCategory)
 
 		//搜索商品
 		v1.POST("search", api.SearchBook)
