@@ -30,6 +30,7 @@ type SearchBookService struct {
 	ISBN          string `json:"isbn" form:"isbn"`
 	Author        string `json:"author" form:"author"`
 	Publisher     string `json:"publisher" form:"publisher"`
+	model.BasePage
 }
 
 func (service *BookService) Create(ctx context.Context, file []*multipart.FileHeader, uID uint) serializer.Response {
@@ -84,6 +85,9 @@ func (service *BookService) Create(ctx context.Context, file []*multipart.FileHe
 }
 
 func (service *SearchBookService) Search(ctx context.Context) serializer.Response {
+	if service.PageSize == 0 {
+		service.PageSize = 15
+	}
 	typeId := service.OperationType
 	bookDao := dao.NewBookDao(ctx)
 	var books []model.Book
@@ -93,13 +97,13 @@ func (service *SearchBookService) Search(ctx context.Context) serializer.Respons
 	code := e.Success
 	switch typeId {
 	case 1: //名字查找
-		count, books, err = bookDao.SearchBookByName(service.Name)
+		count, books, err = bookDao.SearchBookByName(service.Name, service.BasePage)
 	case 2: //ISBN查找
-		count, books, err = bookDao.SearchBookByISBN(service.ISBN)
+		count, books, err = bookDao.SearchBookByISBN(service.ISBN, service.BasePage)
 	case 3: //作者查找
-		count, books, err = bookDao.SearchBookByAuthor(service.Author)
+		count, books, err = bookDao.SearchBookByAuthor(service.Author, service.BasePage)
 	case 4: //出版社查找
-		count, books, err = bookDao.SearchBookByPublisher(service.Publisher)
+		count, books, err = bookDao.SearchBookByPublisher(service.Publisher, service.BasePage)
 	default:
 		flag = true
 	}
@@ -126,4 +130,27 @@ func (service *SearchBookService) Search(ctx context.Context) serializer.Respons
 		}
 	}
 	return serializer.BuildSearchResponse(books, uint(len(books)))
+}
+
+func (service *BookService) List(ctx context.Context) serializer.Response {
+	code := e.Success
+	var books []model.Book
+	var err error
+
+	if service.PageSize == 0 {
+		service.PageSize = 15
+	}
+
+	bookDao := dao.NewBookDao(ctx)
+	books, err = bookDao.ListBooks(service.BasePage)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	return serializer.BuildListResponse(serializer.BuildBooks(books), uint(len(books)))
 }

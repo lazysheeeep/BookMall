@@ -24,6 +24,8 @@ func NewRouter() *gin.Engine {
 		v1.GET("carousel", api.ListCarousel)
 		v1.GET("firstCategory", api.ListCategory)
 
+		//展示商品
+		v1.GET("book", api.ListBook)
 		//搜索商品
 		v1.POST("search", api.SearchBook)
 
