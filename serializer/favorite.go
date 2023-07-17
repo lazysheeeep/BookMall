@@ -1,6 +1,7 @@
 package serializer
 
 import (
+	"BookMall/config"
 	"BookMall/dao"
 	"BookMall/model"
 	"context"
@@ -29,7 +30,7 @@ func BuildFavorite(favorite model.Favorite, book model.Book, boss model.User) Fa
 		Name:          book.Name,
 		Category:      book.Category,
 		Info:          book.Category,
-		ImgPath:       book.ImgPath,
+		ImgPath:       config.Host + config.HttpPort + config.BookPath + book.ImgPath,
 		Price:         book.Price,
 		DiscountPrice: book.DiscountPrice,
 		Num:           book.Num,
