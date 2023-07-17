@@ -3,7 +3,6 @@ package serializer
 import (
 	"BookMall/config"
 	"BookMall/model"
-	"BookMall/pkg/e"
 )
 
 type BookVO struct {
@@ -39,17 +38,6 @@ func BuildBook(item model.Book) BookVO {
 		BossName:      item.BossName,
 		BossAvatar:    config.Host + config.HttpPort + config.BookPath + item.BossAvatar,
 		Category:      item.Category,
-	}
-}
-
-func BuildSearchResponse(items []model.Book, total uint) Response {
-	return Response{
-		Status: 200,
-		Msg:    e.GetMsg(200),
-		Data: ListData{
-			List:  BuildBooks(items),
-			Total: total,
-		},
 	}
 }
 

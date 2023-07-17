@@ -15,6 +15,7 @@ var MsgFlags = map[int]string{
 	ErrorOperationType:         "操作数选择错误",
 	ErrorBookNotExist:          "没有找到书本",
 	ErrorCreateDaoFavorite:     "创建收藏失败",
+	ErrorNoneFavorite:          "收藏夹为空",
 }
 
 func GetMsg(code int) string {

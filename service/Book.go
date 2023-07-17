@@ -129,7 +129,7 @@ func (service *SearchBookService) Search(ctx context.Context) serializer.Respons
 			Msg:    e.GetMsg(code),
 		}
 	}
-	return serializer.BuildSearchResponse(books, uint(len(books)))
+	return serializer.BuildListResponse(serializer.BuildBooks(books), uint(len(books)))
 }
 
 func (service *BookService) List(ctx context.Context) serializer.Response {

@@ -22,4 +22,5 @@ var (
 
 	//收藏夹模块
 	ErrorCreateDaoFavorite = 70001
+	ErrorNoneFavorite      = 70002
 )

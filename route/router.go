@@ -42,8 +42,11 @@ func NewRouter() *gin.Engine {
 			//创建商品
 			authed.POST("user/book", api.CreateBook)
 
+			//收藏夹模块
 			//创建收藏夹
 			authed.POST("user/favorite", api.CreateFavorite)
+			//展示收藏夹
+			authed.GET("user/showFavorite", api.ShowFavorite)
 		}
 	}
 	return r

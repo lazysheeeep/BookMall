@@ -13,7 +13,7 @@ type FavoriteService struct {
 	model.BasePage
 }
 
-func (service *FavoriteService) CreateFavorite(ctx context.Context, uId uint) serializer.Response {
+func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer.Response {
 	code := e.Success
 	var favorite model.Favorite
 	var user model.User
@@ -75,4 +75,36 @@ func (service *FavoriteService) CreateFavorite(ctx context.Context, uId uint) se
 		Status: code,
 		Msg:    e.GetMsg(code),
 	}
+}
+
+func (service *FavoriteService) Show(ctx context.Context, uId uint) serializer.Response {
+	code := e.Success
+	var favorites []model.Favorite
+	var err error
+	var count int64
+
+	if service.PageSize == 0 {
+		service.PageSize = 15
+	}
+
+	favoritesDao := dao.NewFavoriteDao(ctx)
+	favorites, count, err = favoritesDao.Show(service.BasePage, uId)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	if count == 0 {
+		code = e.ErrorNoneFavorite
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
+	return serializer.BuildListResponse(serializer.BuildFavorites(favorites, ctx), uint(len(favorites)))
 }
