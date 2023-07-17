@@ -18,6 +18,11 @@ func (dao *BookDao) CreateBook(book model.Book) error {
 	return dao.Model(&model.Book{}).Create(&book).Error
 }
 
+func (dao *BookDao) GetBookById(id uint) (book model.Book, err error) {
+	err = dao.Model(&model.Book{}).Where("id=?", id).Find(&book).Error
+	return
+}
+
 func (dao *BookDao) SearchBookByName(name string) (count int64, books []model.Book, err error) {
 	err = dao.Model(&model.Book{}).Where("name=?", name).Find(&books).Count(&count).Error
 	return

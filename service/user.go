@@ -134,7 +134,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 }
 
 func (service *UserService) Update(ctx context.Context, ID uint) serializer.Response {
-	var user *model.User
+	var user model.User
 	var err error
 	code := e.Success
 	//根据userName得到user,claims是在登录是生成的,所以id肯定是存在的
@@ -170,7 +170,7 @@ func (service *UserService) Update(ctx context.Context, ID uint) serializer.Resp
 
 func (service *UserService) Upload(ctx context.Context, file multipart.File, ID uint) serializer.Response {
 	code := e.Success
-	var user *model.User
+	var user model.User
 	var err error
 
 	//找到用户

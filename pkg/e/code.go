@@ -19,4 +19,7 @@ var (
 	ErrorUploadBookToStatic = 60001
 	ErrorOperationType      = 60002
 	ErrorBookNotExist       = 60003
+
+	//收藏夹模块
+	ErrorCreateDaoFavorite = 70001
 )

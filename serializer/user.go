@@ -14,7 +14,7 @@ type UserVO struct {
 	Avatar   string `json:"avatar"`
 }
 
-func BuildUser(user *model.User) UserVO {
+func BuildUser(user model.User) UserVO {
 	return UserVO{
 		ID:       user.ID,
 		UserName: user.UserName,

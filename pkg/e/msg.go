@@ -14,6 +14,7 @@ var MsgFlags = map[int]string{
 	ErrorUpLoadAvatarToStatic:  "上传头像到本地失败",
 	ErrorOperationType:         "操作数选择错误",
 	ErrorBookNotExist:          "没有找到书本",
+	ErrorCreateDaoFavorite:     "创建收藏失败",
 }
 
 func GetMsg(code int) string {
