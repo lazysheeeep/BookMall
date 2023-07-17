@@ -108,3 +108,36 @@ func (service *FavoriteService) Show(ctx context.Context, uId uint) serializer.R
 
 	return serializer.BuildListResponse(serializer.BuildFavorites(favorites, ctx), uint(len(favorites)))
 }
+
+func (service *FavoriteService) Delete(ctx context.Context, uId uint) serializer.Response {
+	code := e.Success
+	var favorite model.Favorite
+	var err error
+
+	favoriteDao := dao.NewFavoriteDao(ctx)
+	favorite, err = favoriteDao.GetFavorite(uId, service.BookId)
+
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	err = favoriteDao.Delete(favorite)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
