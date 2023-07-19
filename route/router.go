@@ -53,6 +53,8 @@ func NewRouter() *gin.Engine {
 			//地址模块
 			//创建地址
 			authed.POST("user/address", api.CreateAddress)
+			//修改地址
+			authed.POST("user/updateAddress", api.UpdateAddress)
 			//地址展示
 			authed.GET("user/showAddress", api.ShowAddress)
 			//删除地址
