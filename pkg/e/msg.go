@@ -4,6 +4,7 @@ var MsgFlags = map[int]string{
 	Success:                    "ok",
 	Error:                      "fail",
 	InvalidParams:              "参数错误",
+	ErrorDao:                   "数据库错误",
 	ErrorUserHasExist:          "用户名已经存在",
 	ErrorFailEncryption:        "密码加密失败",
 	ErrorFailCreateUser:        "创建用户失败",

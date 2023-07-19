@@ -4,6 +4,7 @@ var (
 	Success       = 200
 	Error         = 500
 	InvalidParams = 400
+	ErrorDao      = 600
 
 	//用户模块
 	ErrorUserHasExist          = 50001
