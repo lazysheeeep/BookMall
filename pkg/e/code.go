@@ -24,4 +24,7 @@ var (
 	//收藏夹模块
 	ErrorCreateDaoFavorite = 70001
 	ErrorNoneFavorite      = 70002
+
+	//购物车模块
+	ErrorChangeCart = 80001
 )

@@ -1,6 +1,9 @@
 package model
 
+import "gorm.io/gorm"
+
 type Cart struct {
+	gorm.Model
 	UserId uint `gorm:"not null"`
 	BookId uint `gorm:"not null"`
 	BossId uint `gorm:"not null"`
