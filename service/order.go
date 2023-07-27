@@ -1,0 +1,80 @@
+package service
+
+import (
+	"BookMall/dao"
+	"BookMall/model"
+	"BookMall/pkg/e"
+	"BookMall/serializer"
+	"context"
+	"fmt"
+	"math/rand"
+	"strconv"
+	"time"
+)
+
+type OrderService struct {
+	UserId    uint    `json:"user_id" form:"user_id"`
+	BookId    uint    `json:"book_id" form:"book_id"`
+	BossId    uint    `json:"boss_id" form:"boss_id"`
+	Num       uint    `json:"num" form:"num"`
+	Money     float64 `json:"money" form:"money"`
+	OrderNum  uint64  `json:"order_num" form:"order_num"`
+	AddressId uint    `json:"address_id" form:"address_id"`
+	PageNum   uint    `json:"page_num" form:"page_num"` //订单编号
+	PageSize  uint    `json:"page_size" form:"page_size"`
+	State     uint    `json:"type" form:"type"`
+}
+
+func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Response {
+	var order model.Order
+	var err error
+
+	code := e.Success
+
+	order = model.Order{
+		UserId:    uId,
+		BookId:    service.BookId,
+		BossId:    service.BossId,
+		AddressId: service.AddressId,
+		Num:       service.Num,
+		State:     1,
+		Money:     service.Money,
+	}
+
+	//生成订单号
+	number := fmt.Sprintf("%09v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(1000000000))
+	bookNum := strconv.Itoa(int(service.BookId))
+	userNum := strconv.Itoa(int(uId))
+	number += bookNum + userNum
+	orderNum, err := strconv.ParseUint(number, 10, 64)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	order.OrderNum = orderNum
+
+	expiredTime := float64(time.Now().Unix()) + 20*time.Minute.Seconds()
+	order.ExpiredTime = expiredTime
+
+	orderDao := dao.NewOrderDao(ctx)
+	err = orderDao.Create(order)
+
+	if err != nil {
+		code = e.ErrorDao
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
