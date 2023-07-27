@@ -17,3 +17,14 @@ func CreateOrder(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 }
+
+func ShowOrder(c *gin.Context) {
+	showOrder := service.OrderService{}
+	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&showOrder); err == nil && claim != nil {
+		res := showOrder.Show(c.Request.Context(), claim.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, err)
+	}
+}

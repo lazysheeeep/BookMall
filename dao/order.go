@@ -17,3 +17,8 @@ func NewOrderDao(ctx context.Context) *OrderDao {
 func (dao *OrderDao) Create(order model.Order) error {
 	return dao.Model(&model.Order{}).Create(&order).Error
 }
+
+func (dao *OrderDao) GetOrders(uId uint, pageNum int, pageSize int) (orders []model.Order, err error) {
+	err = dao.Model(&model.Order{}).Where("id=?", uId).Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&orders).Error
+	return
+}

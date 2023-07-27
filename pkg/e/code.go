@@ -27,4 +27,7 @@ var (
 
 	//购物车模块
 	ErrorChangeCart = 80001
+
+	//订单模块
+	ErrorOrderNone = 90001
 )

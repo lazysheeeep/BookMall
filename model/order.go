@@ -12,7 +12,7 @@ type Order struct {
 	AddressId   uint `gorm:"not null"`
 	Num         uint
 	OrderNum    uint64 //订单编号
-	State       uint   //1未支付 2已支付
+	State       uint   //0未支付 1已支付
 	Money       float64
 	ExpiredTime float64
 }

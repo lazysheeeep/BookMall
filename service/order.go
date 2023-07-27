@@ -20,8 +20,8 @@ type OrderService struct {
 	Money     float64 `json:"money" form:"money"`
 	OrderNum  uint64  `json:"order_num" form:"order_num"`
 	AddressId uint    `json:"address_id" form:"address_id"`
-	PageNum   uint    `json:"page_num" form:"page_num"` //订单编号
-	PageSize  uint    `json:"page_size" form:"page_size"`
+	PageNum   int     `json:"page_num" form:"page_num"` //订单编号
+	PageSize  int     `json:"page_size" form:"page_size"`
 	State     uint    `json:"type" form:"type"`
 }
 
@@ -77,4 +77,37 @@ func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Re
 		Status: code,
 		Msg:    e.GetMsg(code),
 	}
+}
+
+func (service *OrderService) Show(ctx context.Context, uId uint) serializer.Response {
+	var orders []model.Order
+	var err error
+
+	code := e.Success
+
+	if service.PageSize == 0 {
+		service.PageSize = 5
+	}
+
+	orderDao := dao.NewOrderDao(ctx)
+	orders, err = orderDao.GetOrders(uId, service.PageNum, service.PageSize)
+
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	if len(orders) == 0 {
+		code = e.ErrorOrderNone
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
+	return serializer.BuildListResponse(serializer.BuildOrders(ctx, orders), uint(len(orders)))
 }
