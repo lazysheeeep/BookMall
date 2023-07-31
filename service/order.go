@@ -143,3 +143,38 @@ func (service *OrderService) Show(ctx context.Context, aId string) serializer.Re
 		Data:   serializer.BuildOrder(book, address, order),
 	}
 }
+
+func (service *OrderService) Delete(ctx context.Context, aId string) serializer.Response {
+	var order model.Order
+	var err error
+
+	code := e.Success
+
+	id, err := strconv.Atoi(aId)
+
+	orderDao := dao.NewOrderDao(ctx)
+	order, err = orderDao.GetOrderId(uint(id))
+	if err != nil {
+		code = e.ErrorDao
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	err = orderDao.DeleteOrder(order)
+	if err != nil {
+		code = e.ErrorDao
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}

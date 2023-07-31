@@ -27,3 +27,7 @@ func (dao *OrderDao) GetOrderId(id uint) (order model.Order, err error) {
 	err = dao.Model(&model.Order{}).Where("id=?", id).Find(&order).Error
 	return
 }
+
+func (dao *OrderDao) DeleteOrder(order model.Order) error {
+	return dao.Model(&model.Order{}).Delete(&order).Error
+}

@@ -39,3 +39,14 @@ func ShowOrder(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 }
+
+func DeleteOrder(c *gin.Context) {
+	deleteOrder := service.OrderService{}
+	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&deleteOrder); err == nil && claim != nil {
+		res := deleteOrder.Delete(c.Request.Context(), c.Param("id"))
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, err)
+	}
+}

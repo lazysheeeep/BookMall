@@ -77,6 +77,9 @@ func NewRouter() *gin.Engine {
 			authed.GET("orders/:id", api.ShowOrder)
 			//展示订单
 			authed.GET("orders", api.GetOrder)
+			//修改订单信息
+			authed.DELETE("orders/:id", api.DeleteOrder)
+
 		}
 	}
 	return r
