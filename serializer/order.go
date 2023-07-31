@@ -1,6 +1,7 @@
 package serializer
 
 import (
+	"BookMall/config"
 	"BookMall/dao"
 	"BookMall/model"
 	"context"
@@ -42,7 +43,7 @@ func BuildOrder(book model.Book, address model.Address, order model.Order) Order
 		BossName:      book.BossName,
 		BookId:        book.ID,
 		BookName:      book.Name,
-		ImgPath:       book.ImgPath,
+		ImgPath:       config.Host + config.HttpPort + config.BookPath + book.ImgPath,
 		Num:           order.Num,
 		AddressId:     address.ID,
 		AddressName:   address.Name,

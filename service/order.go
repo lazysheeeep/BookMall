@@ -79,7 +79,7 @@ func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Re
 	}
 }
 
-func (service *OrderService) Show(ctx context.Context, uId uint) serializer.Response {
+func (service *OrderService) Get(ctx context.Context, uId uint) serializer.Response {
 	var orders []model.Order
 	var err error
 
@@ -110,4 +110,36 @@ func (service *OrderService) Show(ctx context.Context, uId uint) serializer.Resp
 	}
 
 	return serializer.BuildListResponse(serializer.BuildOrders(ctx, orders), uint(len(orders)))
+}
+
+func (service *OrderService) Show(ctx context.Context, aId string) serializer.Response {
+	orderId, _ := strconv.Atoi(aId)
+	var order model.Order
+	var err error
+
+	code := e.Success
+
+	orderDao := dao.NewOrderDao(ctx)
+	order, err = orderDao.GetOrderId(uint(orderId))
+
+	addressDao := dao.NewAddressDao(ctx)
+	address, err := addressDao.GetAddressById(order.AddressId)
+
+	bookDao := dao.NewBookDao(ctx)
+	book, err := bookDao.GetBookById(order.BookId)
+
+	if err != nil {
+		code = e.ErrorDao
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    err.Error(),
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildOrder(book, address, order),
+	}
 }

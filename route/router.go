@@ -72,9 +72,11 @@ func NewRouter() *gin.Engine {
 
 			//订单模块
 			//创建订单
-			authed.POST("user/createOrder", api.CreateOrder)
+			authed.POST("orders", api.CreateOrder)
+			//获取订单详情
+			authed.GET("orders/:id", api.ShowOrder)
 			//展示订单
-			authed.GET("user/showOrder", api.ShowOrder)
+			authed.GET("orders", api.GetOrder)
 		}
 	}
 	return r

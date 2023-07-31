@@ -18,11 +18,22 @@ func CreateOrder(c *gin.Context) {
 	}
 }
 
+func GetOrder(c *gin.Context) {
+	getOrder := service.OrderService{}
+	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&getOrder); err == nil && claim != nil {
+		res := getOrder.Get(c.Request.Context(), claim.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, err)
+	}
+}
+
 func ShowOrder(c *gin.Context) {
 	showOrder := service.OrderService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&showOrder); err == nil && claim != nil {
-		res := showOrder.Show(c.Request.Context(), claim.ID)
+		res := showOrder.Show(c.Request.Context(), c.Param("id"))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)
