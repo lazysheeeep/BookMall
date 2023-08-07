@@ -19,6 +19,8 @@ var MsgFlags = map[int]string{
 	ErrorNoneFavorite:          "收藏夹为空",
 	ErrorChangeCart:            "书本数量错误",
 	ErrorOrderNone:             "订单数目为零",
+	ErrorPayTime:               "订单已超时，请重新下单",
+	ErrorMoneyNotEnough:        "用户余额不足",
 }
 
 func GetMsg(code int) string {

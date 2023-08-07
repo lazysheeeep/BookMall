@@ -30,4 +30,8 @@ var (
 
 	//订单模块
 	ErrorOrderNone = 90001
+	ErrorPayTime   = 90002
+
+	//账户模块
+	ErrorMoneyNotEnough = 10001
 )

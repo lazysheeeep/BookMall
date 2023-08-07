@@ -47,3 +47,7 @@ func (dao *BookDao) SearchBookByPublisher(publisher string, page model.BasePage)
 	err = dao.Model(&model.Book{}).Where("publisher=?", publisher).Offset((page.PageNum - 1) * (page.PageSize)).Limit(page.PageSize).Find(&books).Count(&count).Error
 	return
 }
+
+func (dao *BookDao) UpdateBook(bId uint, book model.Book) error {
+	return dao.Model(&model.Book{}).Where("id=?", bId).Updates(&book).Error
+}

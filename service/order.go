@@ -37,7 +37,7 @@ func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Re
 		BossId:    service.BossId,
 		AddressId: service.AddressId,
 		Num:       service.Num,
-		State:     1,
+		State:     0,
 		Money:     service.Money,
 	}
 

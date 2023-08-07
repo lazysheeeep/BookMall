@@ -80,6 +80,9 @@ func NewRouter() *gin.Engine {
 			//修改订单信息
 			authed.DELETE("orders/:id", api.DeleteOrder)
 
+			//支付模块
+			//订单支付
+			authed.POST("payment", api.OrderPay)
 		}
 	}
 	return r
