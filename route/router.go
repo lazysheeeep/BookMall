@@ -32,6 +32,7 @@ func NewRouter() *gin.Engine {
 		authed := v1.Group("/") //认证保护
 		authed.Use(middleware.JWT())
 		{
+			//用户模块
 			//更新昵称
 			authed.PUT("user/update", api.UserUpdate)
 			//上传头像
@@ -41,6 +42,12 @@ func NewRouter() *gin.Engine {
 
 			//创建商品
 			authed.POST("user/book", api.CreateBook)
+
+			//余额模块
+			//余额充值
+			authed.POST("money", api.Recharge)
+			//余额展示
+			authed.GET("money", api.ShowMoney)
 
 			//收藏夹模块
 			//创建收藏夹
