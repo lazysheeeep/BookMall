@@ -34,4 +34,10 @@ var (
 
 	//账户模块
 	ErrorMoneyNotEnough = 10001
+
+	//验证码模块
+	ErrorPhoneNum      = 20001
+	ErrorApi           = 20002
+	ErrorCode          = 20003
+	ErrorCheckCodeTime = 20004
 )

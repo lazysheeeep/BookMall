@@ -21,6 +21,10 @@ var MsgFlags = map[int]string{
 	ErrorOrderNone:             "订单数目为零",
 	ErrorPayTime:               "订单已超时，请重新下单",
 	ErrorMoneyNotEnough:        "用户余额不足",
+	ErrorPhoneNum:              "手机号错误，请重新输入",
+	ErrorApi:                   "Api接口错误",
+	ErrorCode:                  "验证码错误",
+	ErrorCheckCodeTime:         "验证码超时，请重新发送验证码",
 }
 
 func GetMsg(code int) string {

@@ -37,7 +37,12 @@ func NewRouter() *gin.Engine {
 			authed.PUT("user/update", api.UserUpdate)
 			//上传头像
 			authed.POST("user/upload", api.UserUploadAvatar)
+
 			//绑定手机号码
+			//发送验证码
+			authed.POST("sendSms", api.SendSms)
+			//绑定验证码
+			authed.POST("checkSms", api.CheckSms)
 			//绑定邮箱 都没写 找个机会去研究一下 小生凡一写的有点奇怪
 
 			//创建商品

@@ -20,6 +20,12 @@ var (
 	Host       string
 	AvatarPath string
 	BookPath   string
+
+	SignName   string
+	TemplateId string
+	SdkAppId   string
+	SecretId   string
+	SecretKey  string
 )
 
 func Init() {
@@ -31,6 +37,7 @@ func Init() {
 	LoadServer(file)
 	LoadMysql(file)
 	LoadPath(file)
+	LoadSms(file)
 	//读写分离
 	//root:1234@tcp(127.0.0.1:3306)/book_mall?charset=utf8mb4&parseTime=True&loc=Local
 	pathRead := strings.Join([]string{DbUser, ":", DbPassword, "@tcp(", DbHost, ":", DbPort, ")/", DbName, "?charset=utf8mb4&parseTime=True&loc=Local"}, "")
@@ -56,4 +63,12 @@ func LoadPath(file *ini.File) {
 	Host = file.Section("path").Key("Host").String()
 	AvatarPath = file.Section("path").Key("AvatarPath").String()
 	BookPath = file.Section("path").Key("BookPath").String()
+}
+
+func LoadSms(file *ini.File) {
+	SignName = file.Section("sms").Key("SignName").String()
+	TemplateId = file.Section("sms").Key("TemplateId").String()
+	SdkAppId = file.Section("sms").Key("SdkAppId").String()
+	SecretId = file.Section("sms").Key("SecretId").String()
+	SecretKey = file.Section("sms").Key("SecretKey").String()
 }
