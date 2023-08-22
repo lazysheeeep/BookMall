@@ -26,6 +26,10 @@ var (
 	SdkAppId   string
 	SecretId   string
 	SecretKey  string
+
+	SmtpHost  string
+	SmtpEmail string
+	SmtpPass  string
 )
 
 func Init() {
@@ -38,6 +42,7 @@ func Init() {
 	LoadMysql(file)
 	LoadPath(file)
 	LoadSms(file)
+	LoadEmail(file)
 	//读写分离
 	//root:1234@tcp(127.0.0.1:3306)/book_mall?charset=utf8mb4&parseTime=True&loc=Local
 	pathRead := strings.Join([]string{DbUser, ":", DbPassword, "@tcp(", DbHost, ":", DbPort, ")/", DbName, "?charset=utf8mb4&parseTime=True&loc=Local"}, "")
@@ -71,4 +76,10 @@ func LoadSms(file *ini.File) {
 	SdkAppId = file.Section("sms").Key("SdkAppId").String()
 	SecretId = file.Section("sms").Key("SecretId").String()
 	SecretKey = file.Section("sms").Key("SecretKey").String()
+}
+
+func LoadEmail(file *ini.File) {
+	SmtpHost = file.Section("email").Key("SmtpHost").String()
+	SmtpEmail = file.Section("email").Key("SmtpEmail").String()
+	SmtpPass = file.Section("email").Key("SmtpPass").String()
 }

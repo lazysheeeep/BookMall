@@ -25,7 +25,7 @@ type SmsCheckService struct {
 	Code  string `json:"code" form:"code"`
 }
 
-func (service *SmsService) Send(ctx context.Context) serializer.Response {
+func (service *SmsService) Send(ctx context.Context, uId uint) serializer.Response {
 	var smsMode model.SmsCode
 	var err error
 
@@ -102,9 +102,9 @@ func (service *SmsService) Send(ctx context.Context) serializer.Response {
 	}
 
 	smsMode.Phone = service.Phone
+	smsMode.UserId = uId
 	smsMode.Code = smsCode
 	smsMode.ExpireTime = time.Now().Unix() + 120
-	smsMode.State = 0
 
 	smsDao := dao.NewSmsDao(ctx)
 	err = smsDao.CreateSms(smsMode)
@@ -135,7 +135,7 @@ func (service *SmsCheckService) Check(ctx context.Context, uId uint) serializer.
 	user, err = userDao.GetUserByUserId(uId)
 
 	smsDao := dao.NewSmsDao(ctx)
-	smsMode, err = smsDao.GetSmsByCode(service.Code)
+	smsMode, err = smsDao.GetSmsByCodeAndId(service.Code, uId)
 
 	if smsMode == nilSms {
 		code = e.ErrorCode
@@ -147,7 +147,6 @@ func (service *SmsCheckService) Check(ctx context.Context, uId uint) serializer.
 
 	if time.Now().Unix() > smsMode.ExpireTime {
 		code = e.ErrorCheckCodeTime
-		smsMode.State = 1
 		err = smsDao.UpdateSms(smsMode.ID, smsMode)
 		if err != nil {
 			code = e.ErrorDao

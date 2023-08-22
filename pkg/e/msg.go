@@ -25,6 +25,7 @@ var MsgFlags = map[int]string{
 	ErrorApi:                   "Api接口错误",
 	ErrorCode:                  "验证码错误",
 	ErrorCheckCodeTime:         "验证码超时，请重新发送验证码",
+	ErrorSendEmail:             "发送邮件失败",
 }
 
 func GetMsg(code int) string {

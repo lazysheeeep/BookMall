@@ -40,4 +40,7 @@ var (
 	ErrorApi           = 20002
 	ErrorCode          = 20003
 	ErrorCheckCodeTime = 20004
+
+	//邮箱绑定模块
+	ErrorSendEmail = 30001
 )

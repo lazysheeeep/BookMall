@@ -18,8 +18,8 @@ func (dao *SmsDao) CreateSms(sms model.SmsCode) error {
 	return dao.Model(&model.SmsCode{}).Create(&sms).Error
 }
 
-func (dao *SmsDao) GetSmsByCode(code string) (sms model.SmsCode, err error) {
-	err = dao.Model(&model.SmsCode{}).Where("code=?", code).Find(&sms).Error
+func (dao *SmsDao) GetSmsByCodeAndId(code string, uId uint) (sms model.SmsCode, err error) {
+	err = dao.Model(&model.SmsCode{}).Where("code=? AND user_id=?", code, uId).Find(&sms).Error
 	return
 }
 
