@@ -33,6 +33,14 @@ func (service *MoneyService) Recharge(ctx context.Context, uId uint) serializer.
 		}
 	}
 
+	if service.Key == "" || len(service.Key) != 16 {
+		code = e.InvalidParams
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Err:    "秘钥长度不足",
+		}
+	}
 	util.Encrypt.SetKey(service.Key)
 	moneyStr := util.Encrypt.AesDecoding(user.Money)
 	userMoney, _ := strconv.ParseFloat(moneyStr, 64)
