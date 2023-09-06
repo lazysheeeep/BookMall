@@ -33,7 +33,7 @@ func ChangeCart(c *gin.Context) {
 	changeCart := service.CartService{}
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&changeCart); err == nil && claims != nil {
-		res := changeCart.Change(c.Request.Context(), claims.ID)
+		res := changeCart.Change(c.Request.Context(), c.Param("id"))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)
@@ -44,7 +44,7 @@ func DeleteCart(c *gin.Context) {
 	deleteCart := service.DeleteCartService{}
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&deleteCart); err == nil && claims != nil {
-		res := deleteCart.Delete(c.Request.Context())
+		res := deleteCart.Delete(c.Request.Context(), c.Param("id"))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)

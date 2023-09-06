@@ -16,7 +16,6 @@ type CartService struct {
 }
 
 type DeleteCartService struct {
-	Id uint `json:"id" form:"id"`
 }
 
 func (service *CartService) Create(ctx context.Context, uId uint) serializer.Response {
@@ -98,14 +97,16 @@ func (service *CartService) Show(ctx context.Context, uId uint) serializer.Respo
 	return serializer.BuildListResponse(serializer.BuildCarts(carts, ctx), uint(len(carts)))
 }
 
-func (service *CartService) Change(ctx context.Context, uId uint) serializer.Response {
+func (service *CartService) Change(ctx context.Context, cId string) serializer.Response {
 	var cart model.Cart
 	var err error
 
 	code := e.Success
 
+	cartId, _ := strconv.Atoi(cId)
+
 	cartDao := dao.NewCartDao(ctx)
-	cart, err = cartDao.GetCart(uId, service.BookId, service.BookId)
+	cart, err = cartDao.GetCartById(uint(cartId))
 	if err != nil {
 		code = e.ErrorDao
 		return serializer.Response{
@@ -141,13 +142,15 @@ func (service *CartService) Change(ctx context.Context, uId uint) serializer.Res
 	}
 }
 
-func (service *DeleteCartService) Delete(ctx context.Context) serializer.Response {
+func (service *DeleteCartService) Delete(ctx context.Context, cId string) serializer.Response {
 	var err error
+
+	cartId, _ := strconv.Atoi(cId)
 
 	code := e.Success
 
 	cartDao := dao.NewCartDao(ctx)
-	cart, _ := cartDao.GetCartById(service.Id)
+	cart, _ := cartDao.GetCartById(uint(cartId))
 	err = cartDao.Delete(cart)
 
 	if err != nil {

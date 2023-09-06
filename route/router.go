@@ -34,9 +34,9 @@ func NewRouter() *gin.Engine {
 		{
 			//用户模块
 			//更新昵称
-			authed.PUT("user/update", api.UserUpdate)
+			authed.PUT("update", api.UserUpdate)
 			//上传头像
-			authed.POST("user/upload", api.UserUploadAvatar)
+			authed.POST("upload", api.UserUploadAvatar)
 
 			//绑定手机号码
 			//发送验证码
@@ -48,7 +48,7 @@ func NewRouter() *gin.Engine {
 			authed.POST("email", api.CheckEmail)
 
 			//创建商品
-			authed.POST("user/book", api.CreateBook)
+			authed.POST("book", api.CreateBook)
 
 			//余额模块
 			//余额充值
@@ -58,31 +58,31 @@ func NewRouter() *gin.Engine {
 
 			//收藏夹模块
 			//创建收藏夹
-			authed.POST("user/favorite", api.CreateFavorite)
+			authed.POST("favorite", api.CreateFavorite)
 			//展示收藏夹
-			authed.GET("user/favorite", api.ShowFavorite)
+			authed.GET("favorite", api.ShowFavorite)
 			//删除收藏
-			authed.POST("user/deleteFavorite", api.DeleteFavorite)
+			authed.DELETE("favorite", api.DeleteFavorite)
 
 			//地址模块
 			//创建地址
-			authed.POST("user/address", api.CreateAddress)
+			authed.POST("address", api.CreateAddress)
 			//修改地址
-			authed.POST("user/updateAddress", api.UpdateAddress)
+			authed.POST("address/:id", api.UpdateAddress)
 			//地址展示
-			authed.GET("user/showAddress", api.ShowAddress)
+			authed.GET("address", api.ShowAddress)
 			//删除地址
-			authed.POST("user/deleteAddress", api.DeleteAddress)
+			authed.DELETE("address/:id", api.DeleteAddress)
 
 			//购物车模块
 			//创建购物车
-			authed.POST("user/cart", api.CreateCart)
+			authed.POST("cart", api.CreateCart)
 			//展示购物车
-			authed.GET("user/showCart", api.ShowCart)
+			authed.GET("cart", api.ShowCart)
 			//修改购物车信息
-			authed.POST("user/changeCart", api.ChangeCart)
+			authed.POST("cart/:id", api.ChangeCart)
 			//删除商品
-			authed.DELETE("user/deleteCart", api.DeleteCart)
+			authed.DELETE("cart/:id", api.DeleteCart)
 
 			//订单模块
 			//创建订单

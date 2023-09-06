@@ -22,7 +22,7 @@ func UpdateAddress(c *gin.Context) {
 	updateAddress := service.AddressService{}
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&updateAddress); err == nil && claims != nil {
-		res := updateAddress.Update(c.Request.Context(), claims.ID)
+		res := updateAddress.Update(c.Request.Context(), c.Param("id"))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)
@@ -44,7 +44,7 @@ func DeleteAddress(c *gin.Context) {
 	deleteAddress := service.AddressService{}
 	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&deleteAddress); err == nil && claims != nil {
-		res := deleteAddress.Delete(c.Request.Context())
+		res := deleteAddress.Delete(c.Request.Context(), c.Param("id"))
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)

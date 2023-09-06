@@ -6,10 +6,10 @@ import (
 	"BookMall/pkg/e"
 	"BookMall/serializer"
 	"context"
+	"strconv"
 )
 
 type AddressService struct {
-	Id       uint   `json:"id" form:"id"`
 	Name     string `json:"name" form:"name"`
 	Province string `json:"province" form:"province"`
 	City     string `json:"city" form:"city"`
@@ -68,25 +68,16 @@ func (service *AddressService) Create(ctx context.Context, uId uint) serializer.
 	}
 }
 
-func (service *AddressService) Update(ctx context.Context, uId uint) serializer.Response {
+func (service *AddressService) Update(ctx context.Context, aId string) serializer.Response {
 	var address model.Address
 	var err error
 
+	addressId, _ := strconv.Atoi(aId)
+
 	code := e.Success
 
-	address = model.Address{
-		UserId:   uId,
-		Name:     service.Name,
-		Province: service.Province,
-		City:     service.City,
-		Area:     service.Area,
-		Street:   service.Street,
-		Detail:   service.Detail,
-		Phone:    service.Phone,
-	}
-
 	addressDao := dao.NewAddressDao(ctx)
-	address, err = addressDao.GetAddressById(service.Id)
+	address, err = addressDao.GetAddressById(uint(addressId))
 	if err != nil {
 		code = e.ErrorDao
 		return serializer.Response{
@@ -104,7 +95,7 @@ func (service *AddressService) Update(ctx context.Context, uId uint) serializer.
 	address.Detail = service.Detail
 	address.Phone = service.Phone
 
-	err = addressDao.Update(address, service.Id)
+	err = addressDao.Update(address, uint(addressId))
 	if err != nil {
 		code = e.ErrorDao
 		return serializer.Response{
@@ -148,13 +139,15 @@ func (service *AddressService) Show(ctx context.Context, uId uint) serializer.Re
 	}
 }
 
-func (service *AddressService) Delete(ctx context.Context) serializer.Response {
+func (service *AddressService) Delete(ctx context.Context, aId string) serializer.Response {
 	code := e.Success
 	var err error
 	var address model.Address
 
+	addressId, _ := strconv.Atoi(aId)
+
 	addressDao := dao.NewAddressDao(ctx)
-	address, _ = addressDao.GetAddressById(service.Id)
+	address, _ = addressDao.GetAddressById(uint(addressId))
 	err = addressDao.Delete(address)
 
 	if err != nil {
