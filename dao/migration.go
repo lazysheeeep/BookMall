@@ -18,8 +18,6 @@ func migration() {
 		&model.Notice{},
 		&model.Order{},
 		&model.User{},
-		&model.SmsCode{},
-		&model.Email{},
 	)
 	if err != nil {
 		fmt.Println("err", err)
