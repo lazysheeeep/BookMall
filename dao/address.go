@@ -14,10 +14,6 @@ func NewAddressDao(ctx context.Context) *AddressDao {
 	return &AddressDao{NewDbClient(ctx)}
 }
 
-func (dao *AddressDao) Test() {
-	dao.Model(&model.Address{})
-}
-
 func (dao *AddressDao) Create(address model.Address) error {
 	err := dao.Model(&model.Address{}).Create(&address).Error
 	return err

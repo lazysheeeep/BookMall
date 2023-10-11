@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BookMall/cache"
 	"BookMall/config"
 	"BookMall/dao"
 	"BookMall/model"
@@ -26,7 +27,6 @@ type SmsCheckService struct {
 }
 
 func (service *SmsService) Send(ctx context.Context, uId uint) serializer.Response {
-	var smsMode model.SmsCode
 	var err error
 
 	code := e.Success
@@ -101,15 +101,12 @@ func (service *SmsService) Send(ctx context.Context, uId uint) serializer.Respon
 		}
 	}
 
-	smsMode.Phone = service.Phone
-	smsMode.UserId = uId
-	smsMode.Code = smsCode
-	smsMode.ExpireTime = time.Now().Unix() + 120
+	//从这里开始code被写入到mysql数据库，现在将这个功能迁移到基于redis上
 
-	smsDao := dao.NewSmsDao(ctx)
-	err = smsDao.CreateSms(smsMode)
+	err = cache.AddSmsCode(ctx, uId, service.Phone, smsCode)
+
 	if err != nil {
-		code = e.ErrorDao
+		code = e.ErrorRedis
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -124,37 +121,27 @@ func (service *SmsService) Send(ctx context.Context, uId uint) serializer.Respon
 }
 
 func (service *SmsCheckService) Check(ctx context.Context, uId uint) serializer.Response {
-	var smsMode model.SmsCode
 	var user model.User
 	var err error
 
 	code := e.Success
-	nilSms := model.SmsCode{}
 
 	userDao := dao.NewUserDao(ctx)
 	user, err = userDao.GetUserByUserId(uId)
 
-	smsDao := dao.NewSmsDao(ctx)
-	smsMode, err = smsDao.GetSmsByCodeAndId(service.Code, uId)
+	rightCode := cache.GetSmsCode(ctx, uId, service.Phone)
 
-	if smsMode == nilSms {
-		code = e.ErrorCode
+	if rightCode == "" { //没有在redis里找到对应的key，视为已超时
+		code = e.ErrorCheckCodeTime
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
 		}
 	}
 
-	if time.Now().Unix() > smsMode.ExpireTime {
-		code = e.ErrorCheckCodeTime
-		err = smsDao.UpdateSms(smsMode.ID, smsMode)
-		if err != nil {
-			code = e.ErrorDao
-			return serializer.Response{
-				Status: code,
-				Msg:    e.GetMsg(code),
-			}
-		}
+	//验证码错误的情况
+	if service.Code != rightCode {
+		code := e.ErrorCode
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),

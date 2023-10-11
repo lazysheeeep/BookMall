@@ -5,6 +5,7 @@ var (
 	Error         = 500
 	InvalidParams = 400
 	ErrorDao      = 600
+	ErrorRedis    = 700
 
 	//用户模块
 	ErrorUserHasExist          = 50001

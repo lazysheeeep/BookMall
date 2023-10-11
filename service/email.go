@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BookMall/cache"
 	"BookMall/config"
 	"BookMall/dao"
 	"BookMall/model"
@@ -18,12 +19,12 @@ type EmailService struct {
 }
 
 type EmailCheckService struct {
-	Code string `json:"code" form:"code"`
+	Email string `json:"email" form:"email"`
+	Code  string `json:"code" form:"code"`
 }
 
 func (service *EmailService) Send(ctx context.Context, uId uint) serializer.Response {
 	var err error
-	var email model.Email
 	code := e.Success
 
 	//生成验证码
@@ -46,12 +47,15 @@ func (service *EmailService) Send(ctx context.Context, uId uint) serializer.Resp
 		}
 	}
 
-	email.UserId = uId
-	email.Code = messageCode
-	email.Email = service.Email
-	email.ExpireTime = time.Now().Unix() + 120
-	emailDao := dao.NewEmailDao(ctx)
-	err = emailDao.CreateEmail(email)
+	//在此处开始将生成的code写入mysql，现在使用redis代替
+	err = cache.AddEmailCode(ctx, uId, service.Email, messageCode)
+	if err != nil {
+		code = e.ErrorRedis
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
 
 	return serializer.Response{
 		Status: code,
@@ -61,25 +65,23 @@ func (service *EmailService) Send(ctx context.Context, uId uint) serializer.Resp
 
 func (service *EmailCheckService) Check(ctx context.Context, uId uint) serializer.Response {
 	var user model.User
-	var email model.Email
-	var nilEmail model.Email
 	var err error
 
 	code := e.Success
 
-	emailDao := dao.NewEmailDao(ctx)
-	email, err = emailDao.GetEmailByCodeAndId(service.Code, uId)
-
-	if email == nilEmail {
-		code = e.ErrorCode
+	result := cache.GetEmailCode(ctx, uId, service.Email)
+	//验证码超时的情况
+	if result == "" {
+		code = e.ErrorCheckCodeTime
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
 		}
 	}
 
-	if email.ExpireTime < time.Now().Unix() {
-		code = e.ErrorCheckCodeTime
+	//验证码错误的情况
+	if service.Code != result {
+		code = e.ErrorCode
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -88,7 +90,7 @@ func (service *EmailCheckService) Check(ctx context.Context, uId uint) serialize
 
 	userDao := dao.NewUserDao(ctx)
 	user, err = userDao.GetUserByUserId(uId)
-	user.Email = email.Email
+	user.Email = service.Email
 	err = userDao.UpdateUser(uId, user)
 	if err != nil {
 		code = e.ErrorDao
