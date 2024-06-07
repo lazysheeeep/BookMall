@@ -27,6 +27,7 @@ var MsgFlags = map[int]string{
 	ErrorCode:                  "验证码错误",
 	ErrorCheckCodeTime:         "验证码超时，请重新发送验证码",
 	ErrorSendEmail:             "发送邮件失败",
+	ErrorUploadPictureToQiniu:  "上传图片到七牛云失败",
 }
 
 func GetMsg(code int) string {

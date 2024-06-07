@@ -30,6 +30,11 @@ var (
 	SmtpHost  string
 	SmtpEmail string
 	SmtpPass  string
+
+	AccessKey   string
+	Secretkey   string
+	Bucket      string
+	QiniuServer string
 )
 
 func Init() {
@@ -43,6 +48,7 @@ func Init() {
 	LoadPath(file)
 	LoadSms(file)
 	LoadEmail(file)
+	LoadQiniu(file)
 	//读写分离
 	//root:1234@tcp(127.0.0.1:3306)/book_mall?charset=utf8mb4&parseTime=True&loc=Local
 	pathRead := strings.Join([]string{DbUser, ":", DbPassword, "@tcp(", DbHost, ":", DbPort, ")/", DbName, "?charset=utf8mb4&parseTime=True&loc=Local"}, "")
@@ -82,4 +88,11 @@ func LoadEmail(file *ini.File) {
 	SmtpHost = file.Section("email").Key("SmtpHost").String()
 	SmtpEmail = file.Section("email").Key("SmtpEmail").String()
 	SmtpPass = file.Section("email").Key("SmtpPass").String()
+}
+
+func LoadQiniu(file *ini.File) {
+	Secretkey = file.Section("qiniu").Key("Secretkey").String()
+	AccessKey = file.Section("qiniu").Key("AccessKey").String()
+	Bucket = file.Section("qiniu").Key("Bucket").String()
+	QiniuServer = file.Section("qiniu").Key("QiniuServer").String()
 }

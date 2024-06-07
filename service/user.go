@@ -7,6 +7,7 @@ import (
 	"BookMall/pkg/util"
 	"BookMall/serializer"
 	"context"
+	"io"
 	"mime/multipart"
 )
 
@@ -184,29 +185,50 @@ func (service *UserService) Upload(ctx context.Context, file multipart.File, ID 
 			Err:    err.Error(),
 		}
 	}
-	//保存图片到本地
-	filePath, err := UploadAvatarToLocalStatic(file, ID, user.UserName)
-	if err != nil {
-		code = e.ErrorUpLoadAvatarToStatic
+	////保存图片到本地
+	//filePath, err := UploadAvatarToLocalStatic(file, ID, user.UserName)
+	//if err != nil {
+	//	code = e.ErrorUpLoadAvatarToStatic
+	//	return serializer.Response{
+	//		Status: code,
+	//		Msg:    e.GetMsg(code),
+	//		Err:    err.Error(),
+	//	}
+	//}
+	//user.Avatar = filePath
+	//err = userDao.UpdateUser(ID, user)
+	//if err != nil {
+	//	code = e.Error
+	//	return serializer.Response{
+	//		Status: code,
+	//		Msg:    e.GetMsg(code),
+	//		Err:    err.Error(),
+	//	}
+	//}
+	//return serializer.Response{
+	//	Status: code,
+	//	Msg:    e.GetMsg(code),
+	//	Data:   serializer.BuildUser(user),
+	//}
+
+	//保存头像到七牛云
+	fileContent, _ := io.ReadAll(file)
+	fileSize := len(fileContent)
+	code, msg := util.UploadToQiniu(file, fileSize)
+	if code != 200 {
 		return serializer.Response{
 			Status: code,
+			Err:    msg,
 			Msg:    e.GetMsg(code),
-			Err:    err.Error(),
 		}
 	}
-	user.Avatar = filePath
+
+	user.Avatar = msg
 	err = userDao.UpdateUser(ID, user)
-	if err != nil {
-		code = e.Error
-		return serializer.Response{
-			Status: code,
-			Msg:    e.GetMsg(code),
-			Err:    err.Error(),
-		}
-	}
 	return serializer.Response{
 		Status: code,
+		Err:    "",
 		Msg:    e.GetMsg(code),
-		Data:   serializer.BuildUser(user),
+		Data:   msg,
 	}
 }
